@@ -1,0 +1,3 @@
+[submodule "u-test"]
+	path = u-test
+	url = https://github.com/IUdalov/u-test

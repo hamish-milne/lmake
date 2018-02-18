@@ -1,0 +1,1 @@
+require 'test.multi_target'
