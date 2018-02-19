@@ -1,4 +1,4 @@
-dielect = { }
+local dielect = { }
 
 local mt_ci = {
     __index = function(t, k)
@@ -30,3 +30,5 @@ dielect.add(dielect.fileType, 'executable', { })
 dielect.add(dielect.fileType, 'object',     { })
 dielect.add(dielect.fileType, 'sharedlib',  { 'DLL' })
 dielect.add(dielect.fileType, 'staticlib',  { 'archive', 'library' })
+
+return dielect

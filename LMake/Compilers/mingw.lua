@@ -1,4 +1,6 @@
-require 'dielect'
+import 'dielect'
+import 'cmd'
+import 'path'
 
 mingw = { }
 
@@ -9,7 +11,7 @@ local types = {
 }
 
 function mingw.file_info(p)
-    local content = io.execute('objdump -a '..io.args(p))
+    local content = cmd.capture('objdump -a '..io.args(p))
     local arch = content:match('architecture: (.-),')
     arch = dielect.arch[arch:match(':(.*)') or arch]
     local type

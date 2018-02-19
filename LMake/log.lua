@@ -1,4 +1,4 @@
-log = { }
+local log = { }
 
 local function format(s, ...)
 	for i=1,select('#',...) do
@@ -26,3 +26,5 @@ end
 function log.fatal(msg, ...)
 	error('[ FATAL ] '..format(msg, ...))
 end
+
+return log

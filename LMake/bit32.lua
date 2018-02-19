@@ -1,5 +1,5 @@
 if not bit32 then
-    bit32 = {
+    bit32 = load([[ return {
         band = function(a, b) return a & b end,
         bor = function(a, b) return a | b end,
         bxor = function(a, b) return a ~ b end,
@@ -11,5 +11,5 @@ if not bit32 then
             local z = x << (32 - n)
             return y | z
         end
-    }
+    }]])()
 end

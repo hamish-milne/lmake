@@ -1,18 +1,33 @@
-function string.trim(s)
-	return s:match("^%s*(.-)%s*$")
-end
+import 'log'
 
 function switch(value, t)
 	local v = t[value]
 	if v == nil then
-		error('Switch value ' .. value .. ' not defined!')
+		log.fatal('Switch value "$1" not defined!', value)
 	end
 	return v
 end
 
-function io.exists(name)
-   local f=io.open(name,"r")
-   if f~=nil then io.close(f) return true else return false end
+function inherit(t)
+	for k,v in pairs(t.__base) do
+		if t[k] == nil then t[k] = v end
+	end
+	return t
+end
+
+local mt_noNil = {
+	__index = function(t, k)
+		log.fatal("The key '$1' does not exist in '$2'", k, t)
+	end
+}
+
+function noNilTable(t)
+	if getmetatable(t) then log.fatal('Table already has a metatable') end
+	return setmetatable(t, mt_noNil)
+end
+
+function string.trim(s)
+	return s:match("^%s*(.-)%s*$")
 end
 
 function string.starts(String,Start)
@@ -33,20 +48,6 @@ function string.ends(String,End)
 		return false
 	end
    return End=='' or string.sub(String,-string.len(End))==End
-end
-
-function table.concatenate(t1,t2)
-    for i=1,#t2 do
-        t1[#t1+1] = t2[i]
-    end
-    return t1
-end
-
-function table.append(t1, ...)
-	for i=1,select('#', ...) do
-		t1[#t1+1] = select(i, ...)
-	end
-	return t1
 end
 
 function table.select(t, f)
@@ -71,31 +72,6 @@ function table.getKey(t, search)
 	end
 end
 
-function io.args(a, ...)
-	if not a then
-		if select('#', ...) == 0 then return '' end
-		return io.args(...)
-	end
-	if type(a) == 'table' then
-		return io.args(table.unpack(table.append(a, ...)))
-	end
-	-- TODO: Additional escapes? Platform specific?
-	local escaped = tostring(a):gsub('\\', '\\\\'):gsub('"', '\\"')
-	if escaped:match('.*%s+.*') then
-		escaped = '"'..escaped..'"'
-	end
-	return escaped..' '..io.args(...)
-end
-
-function io.execute(p)
-	local f = io.popen(p)
-	local o = f:read('*a')
-	if not f:close() then
-		error("Error executing process "..p)
-	end
-	return o
-end
-
 function io.readAll(path)
 	local f = io.open(path, 'r')
 	if not f then return nil end
@@ -106,7 +82,12 @@ end
 
 function io.writeAll(path, content)
 	local f = io.open(path, 'w')
-	if not f then error('Unable to open '..path..' for writing') end
+	if not f then log.fatal('Unable to open "$1" for writing', path) end
 	f:write(content)
 	f:close()
 end
+
+function io.exists(name)
+	local f=io.open(name,"r")
+	if f~=nil then io.close(f) return true else return false end
+ end

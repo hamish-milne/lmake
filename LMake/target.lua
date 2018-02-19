@@ -1,7 +1,6 @@
-require 'log'
-require 'path'
-require 'util'
-require 'sha2'
+import 'log'
+import 'path'
+import 'sha2'
 
 local multi_mt = {
     __index = function(t, k)

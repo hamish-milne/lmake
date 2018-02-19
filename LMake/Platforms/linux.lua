@@ -1,36 +1,36 @@
-require 'util'
+import 'cmd'
 
 return {
 	__uname = 'Linux',
 	arch = function(t)
-		local a = io.popen('uname -m'):read('*a'):trim()
+		local a = cmd.capture('uname -m'):trim()
 		if not a then error('Unable to determine architecture from uname') end
-		t.arch = function() return a end
 		return a
 	end,
 	is = function(t)
-		if system.pathseparator ~= '/' then return false end
-		local n = io.popen('uname'):read('*a'):trim()
+		if package.config:sub(1,1) ~= '/' then return false end
+		local n = cmd.capture('uname'):trim()
 		return n == t.__uname
     end,
     path = {
+		separators = {'/'},
 		modified = function(p)
-			return tonumber(io.execute(io.args('stat', '-c', '%Y', p)))
+			return tonumber(cmd.capture('stat -c %Y '..cmd.args(p)))
 		end,
 		workingDir = function(p)
-			return io.execute('pwd')
+			return cmd.capture('pwd')
 		end,
 		normalize = function(p)
-			return io.execute('realpath -m '..io.args(p))
+			return cmd.capture('realpath -m '..cmd.args(p))
 		end,
 		relative = function(p)
-			return io.execute(io.args('realpath', dir and ('--relative-to='..dir) or nil, p))
+			return cmd.capture('realpath '..cmd.args(dir and ('--relative-to='..dir) or nil, p))
 		end,
 		fileType = function(p)
-			return io.execute('file --mime-type -b '..io.args(p)):match('application/x%-(.+)')
+			return cmd.capture('file --mime-type -b '..cmd.args(p)):match('application/x%-(.+)')
 		end,
 		dirList = function(p, search)
-			return io.execute('find ${PWD} -name '..io.args(search or '*'))
+			return cmd.capture('find ${PWD} -name '..cmd.args(search or '*'))
 		end
     }
 }

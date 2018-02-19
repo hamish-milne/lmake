@@ -1,11 +1,11 @@
-require 'util'
-require 'platforms'
+import 'platform'
 
 local pathDefaults = { }
 
-path = setmetatable({ }, {
+local path = setmetatable({ }, {
 	__index = function(t, k)
-		return platform.current.path[k] or pathDefaults[k] or log.fatal('No path operation "$1"', k)
+		return platform.host.path[k] or pathDefaults[k]
+			or log.fatal('No path operation "$1"', k)
 	end
 })
 
@@ -74,3 +74,5 @@ function pathDefaults.changeExt(p, newExt)
 	if #newExt > 0 and newExt[1] ~= '.' then newExt = '.'..newExt end
 	return path.stripExt(p)..(newExt or '')
 end
+
+return path
