@@ -1,11 +1,8 @@
-local test = require 'u-test/u-test'
-require 'LMake/lmake'
-
 function test.multi_target()
     -- Given
     foo = target {
         build = function() end,
-        my_prop = multi { "a", "b", "c" }
+        my_prop = target.multi { "a", "b", "c" }
     }
 
     -- Then
@@ -16,5 +13,3 @@ function test.multi_target()
     test.equal(target.single(foo, {my_prop='b'}).my_prop, 'b')
     test.equal(target.single(foo, {my_prop='c'}).my_prop, 'c')
 end
-
-test.summary()

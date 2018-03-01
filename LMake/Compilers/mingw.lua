@@ -1,8 +1,16 @@
 import 'dielect'
 import 'cmd'
 import 'path'
+import 'gcc_base'
 
-mingw = { }
+local mingw = {
+    command = 'gcc',
+    compile = gcc_base.compile,
+    preprocess = gcc_base.preprocess,
+    link = gcc_base.link
+}
+
+mingw.defaultLinker = mingw
 
 local types = {
     ['file format: pe-'] = 'object',
@@ -22,5 +30,7 @@ function mingw.file_info(p)
         end
         if type then break end
     end
-    return type, arch
+    return dielect.fileType[type], arch
 end
+
+return mingw

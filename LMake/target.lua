@@ -7,14 +7,10 @@ local multi_mt = {
         return rawget(t, '__private')[k] or log.fatal('Index out of range')
     end,
 	__newindex = function(t, k, v) log.fatal('Modifying a multi-list is not permitted') end,
-	__pairs = function(t) return pairs(rawget(t, '__private')) end
+	__pairs = function(t)
+		return pairs(rawget(t, '__private'))
+	end
 }
-
-multi = setmetatable({}, {
-    __call = function(t, d)
-        return setmetatable({__private = d}, multi_mt)
-    end,
-})
 
 local mt_target = {
 	__index = function(t, k)
@@ -88,7 +84,7 @@ local function target_multi(t)
 	return target {depends = parts, isMulti = trueFn, build = trueFn}
 end
 
-target = setmetatable({ }, {
+local target = setmetatable({ }, {
 	__call = function(n, t)
 		if type(t.build) ~= 'function' then
 			log.fatal('Candidate target "$1" has no build function', mt_target.__tostring(t))
@@ -96,6 +92,13 @@ target = setmetatable({ }, {
 		return target_multi(t) or setmetatable({__private=t}, mt_target)
 	end
 })
+
+function target.multi(t)
+	if not type(t) == 'table' then
+		log.fatal('Expected a table, got a $1', type(t))
+	end
+	return setmetatable({__private = t}, multi_mt)
+end
 
 target.globals = {
 	output_dir = 'lmake-build'
@@ -276,3 +279,5 @@ function target.dependsAny(t, checkFn)
 	end
 	return false
 end
+
+return target

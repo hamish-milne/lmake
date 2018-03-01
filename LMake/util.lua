@@ -8,6 +8,10 @@ function switch(value, t)
 	return v
 end
 
+function coalesce(a, b)
+	return  a == nil and b or a
+end
+
 function inherit(t)
 	for k,v in pairs(t.__base) do
 		if t[k] == nil then t[k] = v end

@@ -11,7 +11,13 @@ return {
 		if package.config:sub(1,1) ~= '/' then return false end
 		local n = cmd.capture('uname'):trim()
 		return n == t.__uname
-    end,
+	end,
+	start_process = function(p)
+		return tonumber(cmd.capture(p..' & echo $!'))
+	end,
+	is_alive = function(pid)
+		return cmd.check('ps -o pid -p '..pid..' >/dev/null')
+	end,
     path = {
 		separators = {'/'},
 		modified = function(p)

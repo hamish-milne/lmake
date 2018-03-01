@@ -12,6 +12,10 @@ function import(p)
     imports[s][p] = require(p)
 end
 
+function global(p)
+    _G[p] = require(p)
+end
+
 setmetatable(_G, {
     __index = function(t, k)
         local imp = imports[debug.getinfo(2,'S').source]
@@ -20,5 +24,5 @@ setmetatable(_G, {
 })
 
 require 'util'
-require 'platform'
-require 'target'
+global 'platform'
+global 'target'

@@ -2,7 +2,10 @@ import 'log'
 
 local mt_list = {
     __index = function(t, k)
-        if list[k] then return list[k] end
+        if type(k) ~= 'number' or k ~= math.floor(k) then
+            log.fatal("Index '$1' is not an integer", k)
+        end
+        if k > 0 and k <= #t then return nil end
         log.fatal("Index '$1' out of range for list with length '$2'", k, #t)
     end
 }
@@ -14,7 +17,7 @@ return setmetatable({
         end
         return t
     end,
-    appendTable = function(t, t2)
+    append_list = function(t, t2)
         for k,v in ipairs(t2) do
             t[#t+1] = v
         end

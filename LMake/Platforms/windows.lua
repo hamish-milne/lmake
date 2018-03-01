@@ -10,7 +10,16 @@ return {
 	end,
 	is = function(t)
 		return package.config:sub(1,1) == '\\'
-	end,
+    end,
+    start_process = function(p)
+        if type(p) ~= 'table' then error("Need to specify args as a list") end
+        local pid = cmd.capture('PowerShell -NoLogo -Command $p='..
+            io.args(p[1])..';$a='..io.args(p)..';(Start-Process -PassThru $p $a).Id')
+        return tonumber(pid)
+    end,
+    is_alive = function(pid)
+        return cmd.capture('TASKLIST /NH /FI "PID eq '..pid..'"'):match(tostring(pid))
+    end,
     path = {
         separators = {'\\', '/'},
         modified = function(p)
