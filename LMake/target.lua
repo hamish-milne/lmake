@@ -145,6 +145,22 @@ function target.single(t, filter)
 	else return r[1] end
 end
 
+function target.def(d, t)
+	for k,v in pairs(d) do
+		if type(k) ~= 'string' or not k:starts('__') then
+			t[k] = v
+		end
+	end
+	if d.__required then
+		for i,k in ipairs(d.__required) do
+			if not t[k] then
+				log.error('Missing required field "$1"', k)
+			end
+		end
+	end
+	return target(t)
+end
+
 function target.listDependencies(t, deps)
 	if not deps then deps = { } end
 	if table.getKey(deps, t) then

@@ -1,10 +1,10 @@
 import 'cmd'
-local linux = require 'Platforms.linux'
+import 'Platforms.linux'
 
-return inherit {
+return override {
     __base = linux,
 	__uname = 'Darwin',
-    path = inherit {
+    path = override {
         __base = linux.path,
         modified = function(p)
             return tonumber(cmd.capture('stat -f %m '..cmd.args(p)))

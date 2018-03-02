@@ -1,6 +1,6 @@
 function test.multi_target()
     -- Given
-    foo = target {
+    local foo = target {
         build = function() end,
         my_prop = target.multi { "a", "b", "c" }
     }

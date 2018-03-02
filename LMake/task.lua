@@ -16,6 +16,7 @@ end
 function task.custom(t)
     t.routine = coroutine.create(function() t:run() end)
     t.now = task_now
+    return t
 end
 
 -------------------------------------------------------------------------------

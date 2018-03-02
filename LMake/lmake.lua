@@ -1,4 +1,5 @@
-print('======= LMAKE ========')
+#!lua
+print('======== LMAKE ========')
 
 -- Include the script directory in the search path
 package.path = package.path..';'..
@@ -9,7 +10,7 @@ local imports = { }
 function import(p)
     local s = debug.getinfo(2,'S').source
     if not imports[s] then imports[s] = { } end
-    imports[s][p] = require(p)
+    imports[s][p:match('[^%.]+$')] = require(p)
 end
 
 function global(p)
@@ -25,4 +26,12 @@ setmetatable(_G, {
 
 require 'util'
 global 'platform'
+global 'path'
 global 'target'
+global 'log'
+
+if arg[1] then
+    require(path.combine(arg[1], 'lmakefile.lua'))
+else
+    log.warning('No path given')
+end

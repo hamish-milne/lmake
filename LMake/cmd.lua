@@ -22,17 +22,21 @@ end
 function cmd.args(a, ...)
     if not a then
         if select('#', ...) == 0 then return '' end
-        return io.args(...)
+        return cmd.args(...)
     end
     if type(a) == 'table' then
-        return io.args(table.unpack(table.append(a, ...)))
+        if select('#', ...) == 0 then
+            return cmd.args(table.unpack(a))
+        else
+            return cmd.args(table.unpack{table.unpack(a), ...})
+        end
     end
     -- TODO: Additional escapes? Platform specific?
     local escaped = tostring(a):gsub('\\', '\\\\'):gsub('"', '\\"')
     if escaped:match('.*%s+.*') then
         escaped = '"'..escaped..'"'
     end
-    return escaped..' '..io.args(...)
+    return escaped..' '..cmd.args(...)
 end
 
 function cmd.capture(p)

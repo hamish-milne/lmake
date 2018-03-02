@@ -12,22 +12,18 @@ function coalesce(a, b)
 	return  a == nil and b or a
 end
 
-function inherit(t)
+function defaults(t)
 	for k,v in pairs(t.__base) do
 		if t[k] == nil then t[k] = v end
 	end
 	return t
 end
 
-local mt_noNil = {
-	__index = function(t, k)
-		log.fatal("The key '$1' does not exist in '$2'", k, t)
+function override(t)
+	for k,v in pairs(t.__base) do
+		t[k] = v
 	end
-}
-
-function noNilTable(t)
-	if getmetatable(t) then log.fatal('Table already has a metatable') end
-	return setmetatable(t, mt_noNil)
+	return t
 end
 
 function string.trim(s)

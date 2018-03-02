@@ -1,7 +1,7 @@
 import 'dielect'
 import 'cmd'
 import 'path'
-import 'gcc_base'
+import 'Compilers.gcc_base'
 
 local mingw = {
     command = 'gcc',
