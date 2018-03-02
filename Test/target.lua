@@ -1,4 +1,16 @@
-function test.multi_target()
+function test.target_name()
+    -- Given
+    my_global_target = target { }
+    local my_named_target = target { name = 'my_name' }
+    local my_unnamed_target = target { }
+
+    -- Then
+    test.equal(tostring(my_global_target), 'my_global_target')
+    test.equal(tostring(my_named_target), 'my_name')
+    test.equal(tostring(my_unnamed_target), 'UNNAMED TARGET')
+end
+
+function test.target_multi()
     -- Given
     local foo = target {
         build = function() end,

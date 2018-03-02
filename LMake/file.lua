@@ -3,11 +3,11 @@ require 'target'
 
 local file = { }
 
-function file.single(path)
+function file.single(path, type)
 	return target {
 		inputData = target.alwaysInDate,
-		output = path,
-		type = file.detectType(path)
+		out_file = path,
+		out_type = type
 	}
 end
 

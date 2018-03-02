@@ -33,9 +33,12 @@ function native.link(t)
     return target.def(def_link, t)
 end
 
+local name_fn = function(t) return t.out_type end
+
 function native.executable(t)
     return native.link(defaults {
         __base = t,
+        name = name_fn,
         out_type = 'executable',
         objects = native.compile(t),
         position_independent = false,
@@ -46,6 +49,7 @@ end
 function native.static(t)
     return native.link(defaults {
         __base = t,
+        name = name_fn,
         out_type = 'staticlib',
         objects = native.compile(t),
         position_independent = true,
@@ -56,6 +60,7 @@ end
 function native.shared(t)
     return native.link(defaults {
         __base = t,
+        name = name_fn,
         out_type = 'sharedlib',
         objects = native.compile(t),
         position_independent = true,

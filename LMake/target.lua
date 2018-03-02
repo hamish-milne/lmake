@@ -86,9 +86,6 @@ end
 
 local target = setmetatable({ }, {
 	__call = function(n, t)
-		if type(t.build) ~= 'function' then
-			log.fatal('Candidate target "$1" has no build function', mt_target.__tostring(t))
-		end
 		return target_multi(t) or setmetatable({__private=t}, mt_target)
 	end
 })
