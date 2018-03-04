@@ -23,6 +23,7 @@ function test.class_basic()
     foo:add('b')
 
     -- Then
+    test.equal(class.cname(foo), 'list')
     test.equal(foo.count, 2)
     test.expect_error('Index out of range', function() return foo[0] end)
     test.equal(foo[1], 'a')

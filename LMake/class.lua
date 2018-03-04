@@ -14,10 +14,13 @@ local mt_instance = { }
 local class_mtags = { }
 
 local default_metamethods = {
-    __index = function(t, k) return t.__private[k] or t.__class[k] end,
-    __len = function(t) return #(t.__private) end,
-    __newindex = function(t, k, v) t.__private[k] = v end
+    __index = function(t, k) return t.__class[k] end,
+    __len = rawlen,
+    __newindex = rawset,
+    __tostring = function(t) return 'object of class '..t.__class.__name end,
+    __call = function() return error('Object is not callable') end
 }
+class.default_metamethods = default_metamethods
 
 local function mt_instance_fn(fname, t, k, ...)
     local k_tag = t.__class.__mtags[k]
@@ -31,13 +34,7 @@ local function mt_instance_fn(fname, t, k, ...)
     if t.__class[fname] then return t.__class[fname](t, k, ...) end
 end
 
-for k,fname in pairs{
-    '__index',
-    '__newindex',
-    '__call',
-    '__len',
-    '__tostring'
-} do
+for fname,v in pairs(default_metamethods) do
     local fn = function(t, k, ...) return mt_instance_fn(fname, t, k, ...) end
     mt_instance[fname] = fn
 end
@@ -61,7 +58,8 @@ end
 
 local function class_new_default(c, t)
     class_get_mtags(c)
-    return setmetatable({ __class = c, __private = t }, mt_instance)
+    rawset(t, '__class', c)
+    return setmetatable(t, mt_instance)
 end
 
 function class.def(name)
@@ -76,6 +74,10 @@ end
 
 function class.def_mtag(name, t)
     class_mtags[name] = t
+end
+
+function class.cname(t)
+    return t.__class.__name
 end
 
 -------------------------------------------------------------------------------
