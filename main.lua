@@ -1,5 +1,5 @@
-test = require 'u-test/u-test'
-require 'LMake/lmake'
+test = require 'u-test.u-test'
+require 'src.lmake'
 
 rawset(test, 'expect_error', function (err, fn, ...)
     local status, msg = pcall(fn, ...)

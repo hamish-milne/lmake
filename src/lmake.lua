@@ -3,7 +3,8 @@ print('======== LMAKE ========')
 
 -- Include the script directory in the search path
 package.path = package.path..';'..
-    debug.getinfo(1, "S").source:sub(2):match("(.*/)")..'?.lua'
+    debug.getinfo(1, "S").source:sub(2):match(
+        "(.*"..package.config:sub(1,1)..")")..'?.lua'
 
 local imports = { }
 
